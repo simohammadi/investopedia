@@ -11,14 +11,22 @@ export const Home = () => {
         borderRadius="30px"
         _dark={{ bg: 'brand.900' }}
         _light={{ bg: 'brand.50' }}
-        boxShadow="lg"
+        boxShadow={'0 4px 12px 0 rgba(0,0,0,0.5)'}
       >
         <Card.Header>
           <Flex flexDir={'row'} justifyContent={'space-between'} alignItems={'center'}>
             <Heading size="md" p={0}>
-              Greenio helps you compensate your shopping
+              <a
+                href="https://www.example.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: 'underline', color: 'inherit' }}
+              >
+                Green.io
+              </a>{' '}
+              helps you compensate your shopping
             </Heading>
-            <BsTreeFill size={'30px'} />'
+            <BsTreeFill size={'30px'} />
           </Flex>
           <Heading size="sm" color="gray.500">
             Be a hero and offset your carbon emissions today
@@ -26,10 +34,14 @@ export const Home = () => {
         </Card.Header>
         <Card.Body>
           <Flex flexDir={'row'} w="100%" alignItems={'center'}>
-            <Heading size="lg" flex={1}>
-              Todays emissions 1.2 kg CO<sub>2</sub>
-            </Heading>
+            <Flex flexDir={'column'} gap={2} flex={1}>
+              <Heading size="md" flex={1}>
+                Todays footprint 1.2 kg CO<sub>2</sub>
+              </Heading>
+              <Heading size="md">Thats 0.2 pine trees 🌲</Heading>
+            </Flex>
             <Button
+              alignSelf={'flex-end'}
               colorPalette={'green'}
               borderRadius={'full'}
               border={'2px solid'}

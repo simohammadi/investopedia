@@ -11,7 +11,7 @@ export const Checkout = () => {
     if (checked) {
       const timer = setTimeout(() => {
         navigate('/post-checkout');
-      }, 2000);
+      }, 1000);
       return () => clearTimeout(timer);
     }
   }, [checked, navigate]);
@@ -28,7 +28,7 @@ export const Checkout = () => {
         <Card.Header>
           <Flex flexDir={'row'} justifyContent={'space-between'} alignItems={'center'}>
             <Heading size="md" p={0}>
-              Your emissions today
+              Todays footprint
             </Heading>
             <BsTreeFill size={'30px'} />
           </Flex>
@@ -39,7 +39,7 @@ export const Checkout = () => {
         <Card.Body>
           <Flex flexDir={'row'} w="100%" alignItems={'center'}>
             <Heading size="lg" flex={1}>
-              Cost to offset: $12.00
+              💸 Offset for 12 sek
             </Heading>
             <Checkbox.Root checked={checked} onCheckedChange={(e) => setChecked(!!e.checked)}>
               <Checkbox.HiddenInput />

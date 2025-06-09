@@ -12,13 +12,13 @@ export const PostCheckout = () => {
       >
         <CardHeader>
           <Heading size="md" color="gray.700" _dark={{ color: 'white' }}>
-            Thank you for your purchase!
+            Thank you for saving the planet!
           </Heading>
         </CardHeader>
         <CardBody>
           <Flex direction="column">
             <Heading size="sm" color="gray.600" _dark={{ color: 'gray.200' }}>
-              Your order has been successfully processed.
+              Your offset has been added to your checkout
             </Heading>
           </Flex>
         </CardBody>
