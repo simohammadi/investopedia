@@ -1,15 +1,16 @@
 import { useState } from 'react';
-import { Flex, Heading, Input, Button, Text, VStack, HStack, Box } from '@chakra-ui/react';
+import { Flex, Input, VStack, HStack, Box, IconButton } from '@chakra-ui/react';
 import { LuChevronRight } from 'react-icons/lu';
+import { Message } from '../components/Message';
 
-interface Message {
+interface MessageData {
   id: string;
   text: string;
   sender: string;
   timestamp: Date;
 }
 
-const mockMessages: Message[] = [
+const mockMessages: MessageData[] = [
   {
     id: '1',
     text: 'Hello! Welcome to our chat platform.',
@@ -40,15 +41,93 @@ const mockMessages: Message[] = [
     sender: 'Assistant',
     timestamp: new Date(Date.now() - 60000),
   },
+  {
+    id: '5',
+    text: 'This chat supports real-time messaging.',
+    sender: 'Assistant',
+    timestamp: new Date(Date.now() - 60000),
+  },
+  {
+    id: '5',
+    text: 'This chat supports real-time messaging.',
+    sender: 'Assistant',
+    timestamp: new Date(Date.now() - 60000),
+  },
+  {
+    id: '5',
+    text: 'This chat supports real-time messaging.',
+    sender: 'Assistant',
+    timestamp: new Date(Date.now() - 60000),
+  },
+  {
+    id: '5',
+    text: 'This chat supports real-time messaging.',
+    sender: 'Assistant',
+    timestamp: new Date(Date.now() - 60000),
+  },
+  {
+    id: '5',
+    text: 'This chat supports real-time messaging.',
+    sender: 'Assistant',
+    timestamp: new Date(Date.now() - 60000),
+  },
+  {
+    id: '5',
+    text: 'This chat supports real-time messaging.',
+    sender: 'Assistant',
+    timestamp: new Date(Date.now() - 60000),
+  },
+  {
+    id: '5',
+    text: 'This chat supports real-time messaging.',
+    sender: 'Assistant',
+    timestamp: new Date(Date.now() - 60000),
+  },
+  {
+    id: '5',
+    text: 'This chat supports real-time messaging.',
+    sender: 'Assistant',
+    timestamp: new Date(Date.now() - 60000),
+  },
+  {
+    id: '5',
+    text: 'This chat supports real-time messaging.',
+    sender: 'Assistant',
+    timestamp: new Date(Date.now() - 60000),
+  },
+  {
+    id: '5',
+    text: 'This chat supports real-time messaging.',
+    sender: 'Assistant',
+    timestamp: new Date(Date.now() - 60000),
+  },
+  {
+    id: '5',
+    text: 'This chat supports real-time messaging.',
+    sender: 'Assistant',
+    timestamp: new Date(Date.now() - 60000),
+  },
+  {
+    id: '5',
+    text: 'This chat supports real-time messaging.',
+    sender: 'Assistant',
+    timestamp: new Date(Date.now() - 60000),
+  },
+  {
+    id: '5',
+    text: 'This chat supports real-time messaging.',
+    sender: 'Assistant',
+    timestamp: new Date(Date.now() - 60000),
+  },
 ];
 
 export const Chat = () => {
-  const [messages, setMessages] = useState<Message[]>(mockMessages);
+  const [messages, setMessages] = useState<MessageData[]>(mockMessages);
   const [inputValue, setInputValue] = useState('');
 
   const handleSendMessage = () => {
     if (inputValue.trim()) {
-      const newMessage: Message = {
+      const newMessage: MessageData = {
         id: Date.now().toString(),
         text: inputValue.trim(),
         sender: 'You',
@@ -66,84 +145,88 @@ export const Chat = () => {
     }
   };
 
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  };
-
   return (
-    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
-      {/* Header */}
-      <Flex flexDir={'row'} justifyContent={'space-between'} alignItems={'center'} p={4}>
-        <Heading size="md" p={0}>
-          Chat Room
-        </Heading>
-      </Flex>
-      <Text color="gray.500" fontSize="sm" px={4} pb={2}>
-        Real-time messaging platform
-      </Text>
-
-      {/* Messages Container */}
-      <VStack
+    <Flex
+      direction="column"
+      w="calc(100vw - 2rem)"
+      h="calc(100vh - 2rem)"
+      position="fixed"
+      top={4}
+      left={4}
+      right={4}
+      bottom={4}
+      overflow="hidden"
+    >
+      {/* Messages Container - Scrollable Flex */}
+      <Flex
+        direction="column"
         flex={1}
-        gap={3}
-        align="stretch"
         overflowY="auto"
-        p={4}
+        pb="100px" // Account for fixed input height
+        px={4}
         css={{
           '&::-webkit-scrollbar': {
-            width: '4px',
+            width: '6px',
           },
           '&::-webkit-scrollbar-track': {
             background: 'transparent',
           },
           '&::-webkit-scrollbar-thumb': {
             background: 'rgba(0,0,0,0.2)',
-            borderRadius: '2px',
+            borderRadius: '3px',
+          },
+          '&::-webkit-scrollbar-thumb:hover': {
+            background: 'rgba(0,0,0,0.4)',
           },
         }}
       >
-        {messages.map((message) => (
-          <Box key={message.id}>
-            <HStack gap={2} align="start">
-              <Text fontWeight="bold" fontSize="sm" minW="60px">
-                {message.sender}:
-              </Text>
-              <VStack align="start" gap={0} flex={1}>
-                <Text fontSize="sm">{message.text}</Text>
-                <Text fontSize="xs" color="gray.500">
-                  {formatTime(message.timestamp)}
-                </Text>
-              </VStack>
-            </HStack>
-          </Box>
-        ))}
-      </VStack>
+        <VStack gap={1} align="stretch">
+          {messages.map((message) => (
+            <Message key={message.id} message={message} />
+          ))}
+        </VStack>
+      </Flex>
 
-      <HStack gap={2} py={4} px={14} pos="absolute" bottom={0} left={0} right={0}>
-        <Input
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={handleKeyPress}
-          placeholder="Type your message..."
-          bg="white"
-          _dark={{ bg: 'gray.700' }}
-          borderRadius="full"
-          flex={1}
-          px={8}
-        />
-        <Button
-          onClick={handleSendMessage}
-          bg={'brand.500'}
-          borderRadius={'full'}
-          border={'2px solid'}
-          borderColor={'gray.400'}
-          boxShadow={'0 2px 6px 0 rgba(0,0,0,0.3)'}
-          _hover={{ bg: 'brand.600' }}
-          disabled={!inputValue.trim()}
-        >
-          <LuChevronRight />
-        </Button>
-      </HStack>
-    </div>
+      {/* Input Area - Fixed at bottom */}
+      <Box
+        p={4}
+        borderTop="1px"
+        borderColor="gray.200"
+        bg="white"
+        _dark={{ borderColor: 'gray.700', bg: 'gray.900' }}
+        position="fixed"
+        bottom={0}
+        left={0}
+        right={0}
+        zIndex={10}
+      >
+        <HStack gap={2}>
+          <Input
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={handleKeyPress}
+            placeholder="Type your message..."
+            bg="gray.50"
+            _dark={{ bg: 'gray.700' }}
+            borderRadius="full"
+            flex={1}
+            px={4}
+          />
+          <IconButton
+            onClick={handleSendMessage}
+            bg={'brand.500'}
+            borderRadius={'full'}
+            border={'2px solid'}
+            borderColor={'gray.400'}
+            boxShadow={'0 2px 6px 0 rgba(0,0,0,0.3)'}
+            _hover={{ bg: 'brand.600' }}
+            disabled={!inputValue.trim()}
+            size="lg"
+          >
+            <LuChevronRight />
+          </IconButton>
+        </HStack>
+      </Box>
+    </Flex>
   );
 };
