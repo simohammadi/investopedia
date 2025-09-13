@@ -6,4 +6,8 @@ export const routes: RouteObject[] = [
     path: '/',
     element: <ChatPage />,
   },
+  {
+    path: '/chat/:id',
+    element: <ChatPage />,
+  },
 ];

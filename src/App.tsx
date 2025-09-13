@@ -1,5 +1,5 @@
 import React from 'react';
-import { MemoryRouter, useRoutes } from 'react-router-dom';
+import { BrowserRouter, useRoutes } from 'react-router-dom';
 import { routes } from './routes';
 import { Layout } from './components/Layout';
 
@@ -9,11 +9,11 @@ function AppRoutes() {
 
 function App() {
   return (
-    <MemoryRouter>
+    <BrowserRouter>
       <Layout>
         <AppRoutes />
       </Layout>
-    </MemoryRouter>
+    </BrowserRouter>
   );
 }
 
