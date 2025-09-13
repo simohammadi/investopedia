@@ -1,9 +1,9 @@
 import { RouteObject } from 'react-router-dom';
-import { Chat } from './pages/Chat';
+import { ChatPage } from './pages/ChatPage';
 
 export const routes: RouteObject[] = [
   {
     path: '/',
-    element: <Chat />,
+    element: <ChatPage />,
   },
 ];

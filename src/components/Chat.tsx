@@ -1,7 +1,7 @@
 import { useState, useRef, useLayoutEffect } from 'react';
 import { Flex, Input, VStack, HStack, Box, IconButton } from '@chakra-ui/react';
 import { LuChevronRight } from 'react-icons/lu';
-import { Message } from '../components/Message';
+import { Message } from './Message';
 import Typewriter from 'typewriter-effect/dist/core';
 
 interface MessageData {
@@ -239,8 +239,14 @@ export const Chat = () => {
             background: 'transparent',
           },
           '&::-webkit-scrollbar-thumb': {
-            background: 'rgba(0,0,0,0.2)',
+            background: 'transparent',
             borderRadius: '3px',
+            opacity: 0,
+            transition: 'all 0.3s ease',
+          },
+          '&:hover::-webkit-scrollbar-thumb': {
+            background: 'rgba(0,0,0,0.2)',
+            opacity: 1,
           },
           '&::-webkit-scrollbar-thumb:hover': {
             background: 'rgba(0,0,0,0.4)',
@@ -259,7 +265,6 @@ export const Chat = () => {
         p={4}
         borderTop="1px"
         borderColor="gray.200"
-        bg="white"
         _dark={{ borderColor: 'gray.700', bg: 'gray.900' }}
         marginTop="auto"
       >
