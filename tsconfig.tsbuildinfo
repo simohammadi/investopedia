@@ -1,0 +1,16 @@
+{
+  "root": [
+    "./vite.config.ts",
+    "./src/app.tsx",
+    "./src/main.tsx",
+    "./src/routes.tsx",
+    "./src/system.ts",
+    "./src/theme.ts",
+    "./src/vite-env.d.ts",
+    "./src/components/layout.tsx",
+    "./src/components/ui/color-mode-helpers.ts",
+    "./src/components/ui/color-mode.tsx",
+    "./src/pages/chat.tsx"
+  ],
+  "version": "5.8.3"
+}

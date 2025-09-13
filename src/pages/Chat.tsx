@@ -1,18 +1,6 @@
 import { useState } from 'react';
-import {
-  Flex,
-  Card,
-  Heading,
-  Input,
-  Button,
-  Text,
-  VStack,
-  HStack,
-  Box,
-  useToken,
-} from '@chakra-ui/react';
-import { BsChatDots } from 'react-icons/bs';
-import { IoSend } from 'react-icons/io5';
+import { Flex, Heading, Input, Button, Text, VStack, HStack, Box } from '@chakra-ui/react';
+import { LuChevronRight } from 'react-icons/lu';
 
 interface Message {
   id: string;
@@ -57,7 +45,6 @@ const mockMessages: Message[] = [
 export const Chat = () => {
   const [messages, setMessages] = useState<Message[]>(mockMessages);
   const [inputValue, setInputValue] = useState('');
-  const [brand600] = useToken('colors', 'brand.800');
 
   const handleSendMessage = () => {
     if (inputValue.trim()) {
@@ -84,95 +71,79 @@ export const Chat = () => {
   };
 
   return (
-    <Flex direction="column" align="center" justify="center" minH="100vh" p={4}>
-      <Card.Root
-        w="700px"
-        maxW="90vw"
-        h="600px"
-        borderRadius="20px"
-        _dark={{ bg: 'brand.900' }}
-        _light={{ bg: 'brand.50' }}
-        boxShadow={'0 4px 12px 0 rgba(0,0,0,0.5)'}
-        display="flex"
-        flexDirection="column"
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      {/* Header */}
+      <Flex flexDir={'row'} justifyContent={'space-between'} alignItems={'center'} p={4}>
+        <Heading size="md" p={0}>
+          Chat Room
+        </Heading>
+      </Flex>
+      <Text color="gray.500" fontSize="sm" px={4} pb={2}>
+        Real-time messaging platform
+      </Text>
+
+      {/* Messages Container */}
+      <VStack
+        flex={1}
+        gap={3}
+        align="stretch"
+        overflowY="auto"
+        p={4}
+        css={{
+          '&::-webkit-scrollbar': {
+            width: '4px',
+          },
+          '&::-webkit-scrollbar-track': {
+            background: 'transparent',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: 'rgba(0,0,0,0.2)',
+            borderRadius: '2px',
+          },
+        }}
       >
-        <Card.Header>
-          <Flex flexDir={'row'} justifyContent={'space-between'} alignItems={'center'}>
-            <Heading size="md" p={0}>
-              Chat Room
-            </Heading>
-            <BsChatDots size={'30px'} color={brand600} />
-          </Flex>
-          <Text color="gray.500" fontSize="sm">
-            Real-time messaging platform
-          </Text>
-        </Card.Header>
+        {messages.map((message) => (
+          <Box key={message.id}>
+            <HStack gap={2} align="start">
+              <Text fontWeight="bold" fontSize="sm" minW="60px">
+                {message.sender}:
+              </Text>
+              <VStack align="start" gap={0} flex={1}>
+                <Text fontSize="sm">{message.text}</Text>
+                <Text fontSize="xs" color="gray.500">
+                  {formatTime(message.timestamp)}
+                </Text>
+              </VStack>
+            </HStack>
+          </Box>
+        ))}
+      </VStack>
 
-        <Card.Body flex={1} display="flex" flexDirection="column" overflow="hidden">
-          {/* Messages Container */}
-          <VStack
-            flex={1}
-            gap={3}
-            align="stretch"
-            overflowY="auto"
-            p={2}
-            css={{
-              '&::-webkit-scrollbar': {
-                width: '4px',
-              },
-              '&::-webkit-scrollbar-track': {
-                background: 'transparent',
-              },
-              '&::-webkit-scrollbar-thumb': {
-                background: 'rgba(0,0,0,0.2)',
-                borderRadius: '2px',
-              },
-            }}
-          >
-            {messages.map((message) => (
-              <Box key={message.id}>
-                <HStack gap={2} align="start">
-                  <Text fontWeight="bold" fontSize="sm" minW="60px">
-                    {message.sender}:
-                  </Text>
-                  <VStack align="start" gap={0} flex={1}>
-                    <Text fontSize="sm">{message.text}</Text>
-                    <Text fontSize="xs" color="gray.500">
-                      {formatTime(message.timestamp)}
-                    </Text>
-                  </VStack>
-                </HStack>
-              </Box>
-            ))}
-          </VStack>
-
-          {/* Input Area */}
-          <HStack gap={2} mt={4}>
-            <Input
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Type your message..."
-              bg="white"
-              _dark={{ bg: 'gray.700' }}
-              borderRadius="full"
-              flex={1}
-            />
-            <Button
-              onClick={handleSendMessage}
-              bg={'brand.500'}
-              borderRadius={'full'}
-              border={'2px solid'}
-              borderColor={'gray.400'}
-              boxShadow={'0 2px 6px 0 rgba(0,0,0,0.3)'}
-              _hover={{ bg: 'brand.600' }}
-              disabled={!inputValue.trim()}
-            >
-              <IoSend />
-            </Button>
-          </HStack>
-        </Card.Body>
-      </Card.Root>
-    </Flex>
+      <HStack gap={2} py={4} px={14} pos="absolute" bottom={0} left={0} right={0}>
+        <Input
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={handleKeyPress}
+          placeholder="Type your message..."
+          bg="white"
+          _dark={{ bg: 'gray.700' }}
+          borderRadius="full"
+          flex={1}
+          px={8}
+        />
+        <Button
+          onClick={handleSendMessage}
+          bg={'brand.500'}
+          borderRadius={'full'}
+          border={'2px solid'}
+          borderColor={'gray.400'}
+          boxShadow={'0 2px 6px 0 rgba(0,0,0,0.3)'}
+          _hover={{ bg: 'brand.600' }}
+          disabled={!inputValue.trim()}
+        >
+          <LuChevronRight />
+        </Button>
+      </HStack>
+    </div>
   );
 };
