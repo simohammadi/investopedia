@@ -24,7 +24,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
 
   return (
-    <Box minH="100vh" bg="gray.50" _dark={{ bg: 'gray.900' }}>
+    <Box minH="100vh" bg="gray.50" _dark={{ bg: 'gray.900' }} display="block">
       <Flex
         as="header"
         align="center"
@@ -51,7 +51,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               <Drawer.Content>
                 <Drawer.Header>
                   <Text fontSize="lg" fontWeight="bold">
-                    QuantPilot
+                    Pervious messages
                   </Text>
                 </Drawer.Header>
                 <Drawer.Body>
@@ -99,9 +99,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         <ColorModeButton />
       </Flex>
 
-      <Box as="main" p={4}>
-        {children}
-      </Box>
+      <Box as="main">{children}</Box>
     </Box>
   );
 };

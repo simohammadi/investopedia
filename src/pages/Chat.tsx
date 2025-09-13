@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef, useLayoutEffect } from 'react';
 import { Flex, Input, VStack, HStack, Box, IconButton } from '@chakra-ui/react';
 import { LuChevronRight } from 'react-icons/lu';
 import { Message } from '../components/Message';
+import Typewriter from 'typewriter-effect/dist/core';
 
 interface MessageData {
   id: string;
@@ -124,6 +125,75 @@ const mockMessages: MessageData[] = [
 export const Chat = () => {
   const [messages, setMessages] = useState<MessageData[]>(mockMessages);
   const [inputValue, setInputValue] = useState('');
+  const [isInputFocused, setIsInputFocused] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const typewriterRef = useRef<Typewriter | null>(null);
+
+  useLayoutEffect(() => {
+    if (!inputRef.current || typewriterRef.current) return;
+
+    const placeholderStrings = [
+      'Ask me anything about investing...',
+      'What stock should I buy?',
+      'How does the market look today?',
+    ];
+
+    let currentPlaceholder = '';
+
+    const customNodeCreator = function (character: string) {
+      if (inputRef.current) {
+        currentPlaceholder += character;
+        inputRef.current.placeholder = currentPlaceholder;
+      }
+      return null;
+    };
+
+    const onRemoveNode = function () {
+      if (inputRef.current && currentPlaceholder.length > 0) {
+        currentPlaceholder = currentPlaceholder.slice(0, -1);
+        inputRef.current.placeholder = currentPlaceholder;
+      }
+    };
+
+    typewriterRef.current = new Typewriter(null, {
+      loop: true,
+      delay: 75,
+      deleteSpeed: 50,
+      pauseFor: 2000,
+      onCreateTextNode: customNodeCreator,
+      onRemoveNode: onRemoveNode,
+    });
+
+    typewriterRef.current
+      .typeString(placeholderStrings[0])
+      .pauseFor(2000)
+      .deleteAll()
+      .typeString(placeholderStrings[1])
+      .pauseFor(2000)
+      .deleteAll()
+      .typeString(placeholderStrings[2])
+      .pauseFor(2000)
+      .deleteAll()
+      .start();
+
+    return () => {
+      if (typewriterRef.current) {
+        typewriterRef.current.stop();
+      }
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!typewriterRef.current || !inputRef.current) return;
+
+    if (isInputFocused) {
+      typewriterRef.current.stop();
+      inputRef.current.placeholder = '';
+    } else {
+      inputRef.current.placeholder = '';
+      typewriterRef.current.start();
+    }
+  }, [isInputFocused]);
 
   const handleSendMessage = () => {
     if (inputValue.trim()) {
@@ -145,24 +215,21 @@ export const Chat = () => {
     }
   };
 
+  const handleFocus = () => {
+    setIsInputFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsInputFocused(false);
+  };
+
   return (
-    <Flex
-      direction="column"
-      w="calc(100vw - 2rem)"
-      h="calc(100vh - 2rem)"
-      position="fixed"
-      top={4}
-      left={4}
-      right={4}
-      bottom={4}
-      overflow="hidden"
-    >
+    <Flex direction="column" w="100%" h="calc(100vh - 64px)" position="relative" overflow="hidden">
       {/* Messages Container - Scrollable Flex */}
       <Flex
         direction="column"
         flex={1}
         overflowY="auto"
-        pb="100px" // Account for fixed input height
         px={4}
         css={{
           '&::-webkit-scrollbar': {
@@ -187,25 +254,24 @@ export const Chat = () => {
         </VStack>
       </Flex>
 
-      {/* Input Area - Fixed at bottom */}
+      {/* Input Area - At bottom */}
       <Box
         p={4}
         borderTop="1px"
         borderColor="gray.200"
         bg="white"
         _dark={{ borderColor: 'gray.700', bg: 'gray.900' }}
-        position="fixed"
-        bottom={0}
-        left={0}
-        right={0}
-        zIndex={10}
+        marginTop="auto"
       >
         <HStack gap={2}>
           <Input
+            ref={inputRef}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyPress}
-            placeholder="Type your message..."
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            placeholder=""
             bg="gray.50"
             _dark={{ bg: 'gray.700' }}
             borderRadius="full"
