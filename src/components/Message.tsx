@@ -1,5 +1,6 @@
 import React from 'react';
-import { Text, VStack, Card, HStack } from '@chakra-ui/react';
+import { Text, VStack, Card, HStack, Icon } from '@chakra-ui/react';
+import { LuPaperclip } from 'react-icons/lu';
 
 interface MessageProps {
   message: {
@@ -7,10 +8,12 @@ interface MessageProps {
     text: string;
     sender: string;
     timestamp: Date;
+    imageUrl?: string;
   };
+  onClick?: () => void;
 }
 
-export const Message: React.FC<MessageProps> = ({ message }) => {
+export const Message: React.FC<MessageProps> = ({ message, onClick }) => {
   const isCurrentUser = message.sender === 'You';
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -29,13 +32,36 @@ export const Message: React.FC<MessageProps> = ({ message }) => {
         borderBottomRightRadius={isCurrentUser ? 0 : 'lg'}
         borderBottomLeftRadius={isCurrentUser ? 'lg' : 0}
         boxShadow="sm"
+        cursor={message.imageUrl ? 'pointer' : 'default'}
+        onClick={message.imageUrl ? onClick : undefined}
+        _hover={message.imageUrl ? { transform: 'translateY(-1px)', boxShadow: 'md' } : {}}
+        transition="all 0.2s"
       >
         <Card.Body p={3}>
           <VStack align="stretch" gap={1}>
             {!isCurrentUser && (
-              <Text fontSize="xs" fontWeight="bold" opacity={0.8}>
-                {message.sender}
-              </Text>
+              <HStack justify="space-between" align="center">
+                <Text fontSize="xs" fontWeight="bold" opacity={0.8}>
+                  {message.sender}
+                </Text>
+                {message.imageUrl && (
+                  <Icon 
+                    as={LuPaperclip} 
+                    boxSize={4} 
+                    color="blue.500"
+                    _dark={{ color: 'blue.400' }}
+                  />
+                )}
+              </HStack>
+            )}
+            {isCurrentUser && message.imageUrl && (
+              <HStack justify="flex-end" align="center">
+                <Icon 
+                  as={LuPaperclip} 
+                  boxSize={4} 
+                  color="white"
+                />
+              </HStack>
             )}
             <Text 
               fontSize="sm" 

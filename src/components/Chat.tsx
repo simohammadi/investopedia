@@ -9,6 +9,7 @@ interface MessageData {
   text: string;
   sender: string;
   timestamp: Date;
+  imageUrl?: string;
 }
 
 const mockMessages: MessageData[] = [
@@ -120,9 +121,28 @@ const mockMessages: MessageData[] = [
     sender: 'Assistant',
     timestamp: new Date(Date.now() - 60000),
   },
+  {
+    id: '6',
+    text: 'Here\'s a chart showing the market trends for this week:',
+    sender: 'Assistant',
+    timestamp: new Date(Date.now() - 30000),
+    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=300&fit=crop&crop=center',
+  },
+  {
+    id: '7',
+    text: 'Here\'s another analysis showing portfolio performance:',
+    sender: 'Assistant',
+    timestamp: new Date(Date.now() - 10000),
+    imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop&crop=center',
+  },
 ];
 
-export const Chat = () => {
+interface ChatProps {
+  onMessageSelect?: (message: MessageData) => void;
+  onMessagesChange?: (messages: MessageData[]) => void;
+}
+
+export const Chat = ({ onMessageSelect, onMessagesChange }: ChatProps) => {
   const [messages, setMessages] = useState<MessageData[]>(mockMessages);
   const [inputValue, setInputValue] = useState('');
   const [isInputFocused, setIsInputFocused] = useState(false);
@@ -138,6 +158,11 @@ export const Chat = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Notify parent when messages change
+  useEffect(() => {
+    onMessagesChange?.(messages);
+  }, [messages, onMessagesChange]);
 
   useLayoutEffect(() => {
     if (!inputRef.current || typewriterRef.current) return;
@@ -265,7 +290,11 @@ export const Chat = () => {
       >
         <VStack gap={1} align="stretch">
           {messages.map((message) => (
-            <Message key={message.id} message={message} />
+            <Message 
+              key={message.id} 
+              message={message} 
+              onClick={() => onMessageSelect?.(message)}
+            />
           ))}
           {/* Invisible div to scroll to */}
           <div ref={messagesEndRef} />
