@@ -1,4 +1,4 @@
-import { useState, useRef, useLayoutEffect } from 'react';
+import { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import { Flex, Input, VStack, HStack, Box, IconButton } from '@chakra-ui/react';
 import { LuChevronRight } from 'react-icons/lu';
 import { Message } from './Message';
@@ -128,6 +128,16 @@ export const Chat = () => {
   const [isInputFocused, setIsInputFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const typewriterRef = useRef<Typewriter | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   useLayoutEffect(() => {
     if (!inputRef.current || typewriterRef.current) return;
@@ -257,6 +267,8 @@ export const Chat = () => {
           {messages.map((message) => (
             <Message key={message.id} message={message} />
           ))}
+          {/* Invisible div to scroll to */}
+          <div ref={messagesEndRef} />
         </VStack>
       </Flex>
 
