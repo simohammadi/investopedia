@@ -232,11 +232,13 @@ export const Chat = ({ onMessageSelect, onMessagesChange }: ChatProps) => {
     }
   }, [isInputFocused]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (inputValue.trim() && !isLoading) {
+      const currentInput = inputValue.trim();
+      
       const newMessage: MessageData = {
         id: Date.now().toString(),
-        text: inputValue.trim(),
+        text: currentInput,
         sender: 'You',
         timestamp: new Date(),
       };
@@ -244,7 +246,7 @@ export const Chat = ({ onMessageSelect, onMessagesChange }: ChatProps) => {
       setMessages([...messages, newMessage]);
       setInputValue('');
       
-      // Simulate loading state for demo purposes
+      // Set loading state
       setIsLoading(true);
       
       // Add loading message
@@ -258,21 +260,53 @@ export const Chat = ({ onMessageSelect, onMessagesChange }: ChatProps) => {
       
       setMessages(prev => [...prev, loadingMessage]);
       
-      // Simulate API delay (remove this when connecting to real backend)
-      setTimeout(() => {
-        setIsLoading(false);
-        // Remove loading message and add mock response
+      try {
+        // Call your FastAPI backend
+        const response = await fetch('http://localhost:8000/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message: currentInput,
+            session_id: 'current-session' // Using session_id as per your API
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const aiResponse = await response.json();
+        
+        // Remove loading message and add AI response
         setMessages(prev => {
           const withoutLoading = prev.filter(msg => !msg.isLoading);
-          const mockResponse: MessageData = {
+          const aiMessage: MessageData = {
             id: (Date.now() + 2).toString(),
-            text: 'This is a mock response. Replace this with your actual backend integration.',
+            text: aiResponse.response, // Your API returns 'response' field
+            sender: 'Assistant',
+            timestamp: new Date(),
+            imageUrl: aiResponse.graph_url || undefined, // Your API returns 'graph_url' field
+          };
+          return [...withoutLoading, aiMessage];
+        });
+      } catch (error) {
+        console.error('Error calling backend:', error);
+        // Remove loading message and add error message
+        setMessages(prev => {
+          const withoutLoading = prev.filter(msg => !msg.isLoading);
+          const errorMessage: MessageData = {
+            id: (Date.now() + 2).toString(),
+            text: 'Sorry, I encountered an error. Please try again.',
             sender: 'Assistant',
             timestamp: new Date(),
           };
-          return [...withoutLoading, mockResponse];
+          return [...withoutLoading, errorMessage];
         });
-      }, 2000);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
