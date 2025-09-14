@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, VStack, Card, HStack, Icon } from '@chakra-ui/react';
+import { Text, VStack, Card, HStack, Icon, Spinner } from '@chakra-ui/react';
 import { LuPaperclip } from 'react-icons/lu';
 
 interface MessageProps {
@@ -9,6 +9,7 @@ interface MessageProps {
     sender: string;
     timestamp: Date;
     imageUrl?: string;
+    isLoading?: boolean;
   };
   onClick?: () => void;
 }
@@ -63,14 +64,29 @@ export const Message: React.FC<MessageProps> = ({ message, onClick }) => {
                 />
               </HStack>
             )}
-            <Text 
-              fontSize="sm" 
-              lineHeight="1.4"
-              color={isCurrentUser ? 'black' : 'inherit'}
-              _dark={{ color: isCurrentUser ? 'white' : 'inherit' }}
-            >
-              {message.text}
-            </Text>
+            {message.isLoading ? (
+              <HStack gap={2}>
+                <Spinner size="sm" color="blue.500" />
+                <Text 
+                  fontSize="sm" 
+                  lineHeight="1.4"
+                  color="gray.600"
+                  _dark={{ color: 'gray.400' }}
+                  fontStyle="italic"
+                >
+                  {message.text}
+                </Text>
+              </HStack>
+            ) : (
+              <Text 
+                fontSize="sm" 
+                lineHeight="1.4"
+                color={isCurrentUser ? 'black' : 'inherit'}
+                _dark={{ color: isCurrentUser ? 'white' : 'inherit' }}
+              >
+                {message.text}
+              </Text>
+            )}
             <Text 
               fontSize="xs" 
               opacity={0.7} 

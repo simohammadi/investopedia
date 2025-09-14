@@ -10,6 +10,7 @@ interface MessageData {
   sender: string;
   timestamp: Date;
   imageUrl?: string;
+  isLoading?: boolean;
 }
 
 const mockMessages: MessageData[] = [
@@ -146,6 +147,7 @@ export const Chat = ({ onMessageSelect, onMessagesChange }: ChatProps) => {
   const [messages, setMessages] = useState<MessageData[]>(mockMessages);
   const [inputValue, setInputValue] = useState('');
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const typewriterRef = useRef<Typewriter | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -231,7 +233,7 @@ export const Chat = ({ onMessageSelect, onMessagesChange }: ChatProps) => {
   }, [isInputFocused]);
 
   const handleSendMessage = () => {
-    if (inputValue.trim()) {
+    if (inputValue.trim() && !isLoading) {
       const newMessage: MessageData = {
         id: Date.now().toString(),
         text: inputValue.trim(),
@@ -241,6 +243,36 @@ export const Chat = ({ onMessageSelect, onMessagesChange }: ChatProps) => {
 
       setMessages([...messages, newMessage]);
       setInputValue('');
+      
+      // Simulate loading state for demo purposes
+      setIsLoading(true);
+      
+      // Add loading message
+      const loadingMessage: MessageData = {
+        id: (Date.now() + 1).toString(),
+        text: 'AI is analyzing your request...',
+        sender: 'Assistant',
+        timestamp: new Date(),
+        isLoading: true,
+      };
+      
+      setMessages(prev => [...prev, loadingMessage]);
+      
+      // Simulate API delay (remove this when connecting to real backend)
+      setTimeout(() => {
+        setIsLoading(false);
+        // Remove loading message and add mock response
+        setMessages(prev => {
+          const withoutLoading = prev.filter(msg => !msg.isLoading);
+          const mockResponse: MessageData = {
+            id: (Date.now() + 2).toString(),
+            text: 'This is a mock response. Replace this with your actual backend integration.',
+            sender: 'Assistant',
+            timestamp: new Date(),
+          };
+          return [...withoutLoading, mockResponse];
+        });
+      }, 2000);
     }
   };
 
@@ -332,7 +364,7 @@ export const Chat = ({ onMessageSelect, onMessagesChange }: ChatProps) => {
             borderColor={'gray.400'}
             boxShadow={'0 2px 6px 0 rgba(0,0,0,0.3)'}
             _hover={{ bg: 'brand.600' }}
-            disabled={!inputValue.trim()}
+            disabled={!inputValue.trim() || isLoading}
             size="lg"
           >
             <LuChevronRight />
