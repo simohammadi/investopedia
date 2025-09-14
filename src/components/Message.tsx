@@ -37,10 +37,21 @@ export const Message: React.FC<MessageProps> = ({ message }) => {
                 {message.sender}
               </Text>
             )}
-            <Text fontSize="sm" lineHeight="1.4">
+            <Text 
+              fontSize="sm" 
+              lineHeight="1.4"
+              color={isCurrentUser ? 'black' : 'inherit'}
+              _dark={{ color: isCurrentUser ? 'white' : 'inherit' }}
+            >
               {message.text}
             </Text>
-            <Text fontSize="xs" opacity={0.7} alignSelf="flex-end">
+            <Text 
+              fontSize="xs" 
+              opacity={0.7} 
+              alignSelf="flex-end"
+              color={isCurrentUser ? 'black' : 'inherit'}
+              _dark={{ color: isCurrentUser ? 'white' : 'inherit' }}
+            >
               {formatTime(message.timestamp)}
             </Text>
           </VStack>
